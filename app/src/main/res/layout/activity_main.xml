@@ -6,17 +6,27 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewPager2"
-        android:layout_width="0dp"
-        android:layout_height="200dp"
-        android:paddingStart="50dp"
-        android:paddingEnd="50dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <ImageView
+        android:id="@+id/arrowIV"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/baseline_arrow_upward_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerIV" />
+
+    <ImageView
+        android:id="@+id/spinnerIV"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/rainbowwheel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainActivityImageView"
+        tools:srcCompat="@tools:sample/avatars" />
 
     <Button
         android:id="@+id/spinBtn"
@@ -27,7 +37,7 @@
         app:layout_constraintEnd_toStartOf="@+id/clearViewBtn"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewPager2"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerIV"
         app:layout_constraintVertical_bias="0.5" />
 
     <Button
@@ -39,7 +49,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/spinBtn"
-        app:layout_constraintTop_toBottomOf="@+id/viewPager2"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerIV"
         app:layout_constraintVertical_bias="0.5" />
 
     <ImageView
@@ -48,12 +58,10 @@
         android:layout_height="240dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/viewPager2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5"
         tools:srcCompat="@tools:sample/avatars" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
