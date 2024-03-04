@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">CustomViewApp</string>
+    <string name="red">Красный</string>
+    <string name="yellow">Жёлтый</string>
+    <string name="light_blue">Голубой</string>
+    <string name="violet">Фиолетовый</string>
+    <string name="clearViewBtnText">Clear view</string>
+    <string name="spinBtnText">Spin</string>
 </resources>

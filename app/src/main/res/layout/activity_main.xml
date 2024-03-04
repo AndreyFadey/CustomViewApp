@@ -6,54 +6,85 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewPager2"
-        android:layout_width="0dp"
+    <com.example.customviewapp.CustomView
+        android:id="@+id/customView"
+        android:layout_width="200dp"
         android:layout_height="200dp"
-        android:paddingStart="50dp"
-        android:paddingEnd="50dp"
+        android:rotation="90"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </com.example.customviewapp.CustomView>
+
+    <ImageView
+        android:id="@+id/arrowIV"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/baseline_arrow_upward_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/customView" />
 
     <Button
         android:id="@+id/spinBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Spin"
+        android:text="@string/spinBtnText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/clearViewBtn"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewPager2"
-        app:layout_constraintVertical_bias="0.5" />
+        app:layout_constraintTop_toBottomOf="@+id/customView"
+        app:layout_constraintVertical_bias="0.502" />
 
     <Button
         android:id="@+id/clearViewBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Clear View"
+        android:text="@string/clearViewBtnText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/spinBtn"
-        app:layout_constraintTop_toBottomOf="@+id/viewPager2"
-        app:layout_constraintVertical_bias="0.5" />
+        app:layout_constraintTop_toBottomOf="@+id/customView" />
 
     <ImageView
-        android:id="@+id/mainActivityImageView"
+        android:id="@+id/resultImageView"
         android:layout_width="320dp"
         android:layout_height="240dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/viewPager2"
+        app:layout_constraintBottom_toTopOf="@+id/customView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5"
         tools:srcCompat="@tools:sample/avatars" />
+
+    <FrameLayout
+        android:layout_width="20dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="24dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5">
+
+        <SeekBar
+            android:id="@+id/scaleSeekBar"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:progress="50"
+            android:rotation="270"
+            android:thumbTint="#0000FF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintStart_toStartOf="parent" />
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

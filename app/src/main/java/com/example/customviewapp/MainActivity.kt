@@ -1,79 +1,97 @@
 package com.example.customviewapp
 
 
-import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Paint
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.widget.Button
+import android.view.animation.Animation
+import android.view.animation.DecelerateInterpolator
+import android.view.animation.RotateAnimation
 import android.widget.ImageView
+import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.CompositePageTransformer
-import androidx.viewpager2.widget.MarginPageTransformer
-import androidx.viewpager2.widget.ViewPager2
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
-import kotlin.math.abs
+import com.example.customviewapp.databinding.ActivityMainBinding
 
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var viewPager2: ViewPager2
-    private lateinit var handler: Handler
-    private lateinit var imageList: ArrayList<Int>
-    private lateinit var adapter: Adapter
+
+    private var startDegree = 0F
+    private var finishDegree = 0F
+
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val spinButton = findViewById<Button>(R.id.spinBtn)
-        val clearButton = findViewById<Button>(R.id.clearViewBtn)
-        val imageView = findViewById<ImageView>(R.id.mainActivityImageView)
+        val imageView = binding.resultImageView
+        val customView = binding.customView
+        customView.scaleX = binding.scaleSeekBar.progress / 100F
+        customView.scaleY = binding.scaleSeekBar.progress / 100F
 
-        init()
-        setUpTransformer()
-
-        spinButton.setOnClickListener {
-            val randomInt = (0..6).random()
-            val url = getUrl()
-
-            handler.post(runnable(randomInt))
-
-            when (randomInt) {
-                0 -> drawText("Красный", imageView, Color.RED)
-                1 -> loadImage(url, imageView)
-                2 -> drawText("Жёлтый", imageView, Color.YELLOW)
-                3 -> loadImage(url, imageView)
-                4 -> drawText("Голубой", imageView, Color.BLUE)
-                5 -> loadImage(url, imageView)
-                6 -> drawText("Фиолетовый", imageView, R.color.violet)
-                else -> return@setOnClickListener
-            }
-
+        binding.spinBtn.setOnClickListener {
+            onClickSpin()
         }
 
-        clearButton.setOnClickListener {
+        binding.clearViewBtn.setOnClickListener {
             imageView.setImageDrawable(null)
         }
+        binding.scaleSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onStopTrackingTouch(seekBar: SeekBar) {}
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) {}
+
+            override fun onProgressChanged(
+                seekBar: SeekBar, progress: Int,
+                fromUser: Boolean
+            ) {
+                customView.scaleX = progress / 100F
+                customView.scaleY = progress / 100F
+            }
+        })
     }
 
-    private fun drawText(text: String, imageView: ImageView, textColor: Int) {
+    private fun onClickSpin() {
+        startDegree = finishDegree % 360
+        finishDegree = ((0..3600).random() + 720).toFloat()
+        val rotate = RotateAnimation(
+            startDegree, finishDegree, RotateAnimation.RELATIVE_TO_SELF,
+            0.5f, RotateAnimation.RELATIVE_TO_SELF, 0.5f
+        )
+        rotate.duration = 3600
+        rotate.fillAfter = true
+        rotate.interpolator = DecelerateInterpolator()
+        rotate.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation) {}
 
-        val newImage = Bitmap.createBitmap(320, 200, Bitmap.Config.ARGB_8888)
+            override fun onAnimationEnd(animation: Animation) {
+                spinResult((360 - finishDegree % 360).toInt())
+            }
 
-        val canvas = Canvas(newImage)
+            override fun onAnimationRepeat(animation: Animation) {}
+        })
+        binding.customView.startAnimation(rotate)
+    }
 
-        val paint = Paint()
-        paint.color = textColor
-        paint.style = Paint.Style.FILL
-        paint.textSize = 40F
-        canvas.rotate(15F)
-        canvas.drawText(text, 20F, 30F, paint)
+    private fun spinResult(degree: Int) {
+        val imageUrl = getUrl()
+        val imageView = findViewById<ImageView>(R.id.resultImageView)
 
-        imageView.setImageBitmap(newImage)
+        when (degree) {
+            in 0..50 -> binding.customView.drawText(ContextCompat.getString(this, R.string.red), imageView, Color.RED)
+            in 51..102 -> loadImage(imageUrl, imageView)
+            in 103..154 -> binding.customView.drawText(ContextCompat.getString(this, R.string.yellow), imageView, Color.YELLOW)
+            in 155..206 -> loadImage(imageUrl, imageView)
+            in 207..257 -> binding.customView.drawText(ContextCompat.getString(this, R.string.light_blue), imageView, Color.BLUE)
+            in 258..309 -> loadImage(imageUrl, imageView)
+            in 310..360 -> binding.customView.drawText(
+                ContextCompat.getString(this, R.string.violet),
+                imageView,
+                ContextCompat.getColor(this, R.color.violet)
+            )
+        }
     }
 
     private fun loadImage(url: String, imageView: ImageView) {
@@ -83,46 +101,5 @@ class MainActivity : AppCompatActivity() {
     private fun getUrl(): String {
         val urlRandomizer = (0..999999).random()
         return "https://loremflickr.com/320/240?random=$urlRandomizer"
-    }
-
-    private fun runnable(item: Int) = Runnable {
-        viewPager2.currentItem = item
-        println(viewPager2.currentItem)
-    }
-
-    private fun setUpTransformer() {
-        val transformer = CompositePageTransformer()
-        transformer.addTransformer(MarginPageTransformer(40))
-        transformer.addTransformer { page, position ->
-            val r = 1 - abs(position)
-            page.scaleY = 0.85f + r * 0.14f
-        }
-
-        viewPager2.setPageTransformer(transformer)
-    }
-
-    private fun init() {
-        viewPager2 = findViewById(R.id.viewPager2)
-        handler = Handler(Looper.myLooper()!!)
-
-        imageList = arrayListOf(
-            R.drawable.red_square,
-            R.drawable.orange_square,
-            R.drawable.yellow_square,
-            R.drawable.green_square,
-            R.drawable.light_blue_squad,
-            R.drawable.blue_square,
-            R.drawable.purple_square
-        )
-
-        adapter = Adapter(imageList, viewPager2)
-
-        viewPager2.adapter = adapter
-        viewPager2.currentItem = 3
-        viewPager2.offscreenPageLimit = 3
-        viewPager2.clipToPadding = false
-        viewPager2.clipChildren = false
-        viewPager2.getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
-
     }
 }
